@@ -86,7 +86,8 @@ def setDoor(distanceMax: float, pourcentage: float):
 
     updateGUI(distanceActuelle, temperature, "Immobile", 0.0)
     while not (distanceObjectif - 0.5 <= distanceActuelle <= distanceObjectif + 0.5):
-        if porteFermeeOuOuverte: break
+        if porteFermeeOuOuverte:
+            break
 
         temperature = Thermistor.getTemperature()
         direction = "Immobile"
@@ -132,10 +133,20 @@ def updateGUI(distance: float, temperature: float, direction: str, vitesse: floa
 def communicateAzure():
     conn_str = "HostName=internetobjethubtest.azure-devices.net;DeviceId=collect_temperature;SharedAccessKey=AQK7Cua8C5xvyDbeWm2GBDbgsoVst4SHm5eKHUcTOa4="
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
+
+    listDistance = []
+
+    for i in range(5):
+        listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
+
+    distance = statistics.median(listDistance)
+
     try:
         device_client.connect()
         data = {
-            "temperature": Thermistor.getTemperature()
+            "temperature": Thermistor.getTemperature(),
+            "pourcentageOuverturePorte": (distance - 5.0) / (distanceMax - 5.0) * 100.0,
+            "distance": distance
         }
         msg = Message(json.dumps(data))
         msg.message_id = uuid.uuid4()
