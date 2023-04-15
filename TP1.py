@@ -11,26 +11,28 @@ import statistics
 import threading
 from azure.iot.device import IoTHubDeviceClient
 from azure.iot.device import Message
+
 porteFermeeOuOuverte = False
+
 
 def setup():
     global motorSpeed
 
-    motorSpeed = (5/3)*1000
+    motorSpeed = (5 / 3) * 1000
     print(motorSpeed)
 
     Thermistor.setup()
     UltrasonicSensor.setup()
     Motor.setup()
     GUI.setup()
-    
+
     global distanceMax
 
     listDistance = []
-    
+
     for i in range(5):
         listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
-        
+
     distanceMax = statistics.median(listDistance)
     # print("", distanceMax)
     communicateAzure()
@@ -54,36 +56,37 @@ def loop():
 
         for i in range(5):
             listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
-        
+
         distance = statistics.median(listDistance)
         temperature = Thermistor.getTemperature()
         updateGUI(distance, temperature, "Immobile", 0.0)
 
-        if(isAutomatic):
-            if temperature < 20.0 :
+        if isAutomatic:
+            if temperature < 20.0:
                 setDoor(distanceMax, 0.0)
             elif 20.0 <= temperature < 35.0:
                 setDoor(distanceMax, ((temperature / 35.0) * 100.0))
             elif temperature >= 35.0:
                 setDoor(distanceMax, 100.0)
         else:
-            #print("Mode Manuel active")
+            # print("Mode Manuel active")
             setDoor(distanceMax, ManualPercentage)
 
-        #print("Temperature = %.2f C | Distance = %.2f cm" %(temperature, distance))
-        #Motor.moveSteps(3, 5, 1)
+        # print("Temperature = %.2f C | Distance = %.2f cm" %(temperature, distance))
+        # Motor.moveSteps(3, 5, 1)
+
 
 def setDoor(distanceMax: float, pourcentage: float):
     global porteFermeeOuOuverte
 
     distanceActuelle = float('{0:.2f}'.format(UltrasonicSensor.getDistance()))
-    distanceObjectif = float('{0:.2f}'.format(distanceMax * (float('{0:.2f}'.format(pourcentage))/100.0)))
+    distanceObjectif = float('{0:.2f}'.format(distanceMax * (float('{0:.2f}'.format(pourcentage)) / 100.0)))
 
     temperature = Thermistor.getTemperature()
 
     updateGUI(distanceActuelle, temperature, "Immobile", 0.0)
-    while not(distanceObjectif - 0.5 <= distanceActuelle <= distanceObjectif + 0.5):
-        if porteFermeeOuOuverte : break
+    while not (distanceObjectif - 0.5 <= distanceActuelle <= distanceObjectif + 0.5):
+        if porteFermeeOuOuverte: break
 
         temperature = Thermistor.getTemperature()
         direction = "Immobile"
@@ -97,36 +100,34 @@ def setDoor(distanceMax: float, pourcentage: float):
             Motor.moveSteps(3, 3, 1)
             direction = "Fermeture"
             vitesse = motorSpeed
-        
-        
+
         listDistance = []
 
         for _ in range(5):
             listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
 
-        #print("check")
+        # print("check")
         distanceActuelle = statistics.median(listDistance)
-        updateGUI(distanceActuelle, temperature, direction, vitesse)                                                                                                                                     
-        #print(distanceObjectif, " - ", pourcentage, "%")
-        #print(distanceActuelle, " - clean")
-        
+        updateGUI(distanceActuelle, temperature, direction, vitesse)
+        # print(distanceObjectif, " - ", pourcentage, "%")
+        # print(distanceActuelle, " - clean")
 
-    if FermerPorte :
-        porteFermeeOuOuverte = True   
+    if FermerPorte:
+        porteFermeeOuOuverte = True
 
 
 def updateGUI(distance: float, temperature: float, direction: str, vitesse: float):
     try:
         GUI.app.update()
-        GUI.app.updateCurrentOpening((distance-5.0)/(distanceMax-5.0)*100.0)
+        GUI.app.updateCurrentOpening((distance - 5.0) / (distanceMax - 5.0) * 100.0)
         GUI.app.updateCurrentTemperature(temperature)
         GUI.app.updateCurrentSpeed(vitesse)
         GUI.app.updateCurrentDirection(direction)
 
-
     except Exception:
         destroy()
         GPIO.cleanup()
+
 
 def communicateAzure():
     conn_str = "HostName=internetobjethubtest.azure-devices.net;DeviceId=collect_temperature;SharedAccessKey=AQK7Cua8C5xvyDbeWm2GBDbgsoVst4SHm5eKHUcTOa4="
@@ -134,8 +135,8 @@ def communicateAzure():
     try:
         device_client.connect()
         data = {
-                "temperature": Thermistor.getTemperature()
-            }
+            "temperature": Thermistor.getTemperature()
+        }
         msg = Message(json.dumps(data))
         msg.message_id = uuid.uuid4()
         msg.correlation_id = "correlation-1234"
@@ -148,23 +149,23 @@ def communicateAzure():
         print("user exit")
     except Exception:
         print("Error")
-        raise   
+        raise
     finally:
         device_client.shutdown()
-    
+
     threading.Timer(60.0, communicateAzure).start()
 
 
 def destroy():
     Thermistor.destroy()
-    
+
 
 if __name__ == "__main__":
-    print ('Program is starting ... ')
+    print('Program is starting ... ')
     setup()
 
     try:
         loop()
-    except KeyboardInterrupt: # Press ctrl-c to end the program.
-        destroy()                                                    
+    except KeyboardInterrupt:  # Press ctrl-c to end the program.
+        destroy()
         GPIO.cleanup()

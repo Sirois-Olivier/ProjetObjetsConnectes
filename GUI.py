@@ -2,8 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 import tkinter.font as tkFont
 
+
 class Application(tk.Tk):
-    
+
     def __init__(self):
         tk.Tk.__init__(self)
         self.isAutomatic = True
@@ -12,19 +13,17 @@ class Application(tk.Tk):
         self.OuvrirPorte = False
         self.creer_widgets()
 
-    
+    def updateCurrentSpeed(self, stringCurrentSpeed):
+        self.labelCurrentSpeed.config(text="Vitesse : " + '{0:.2f}'.format(stringCurrentSpeed) + " steps/s")
 
-    def updateCurrentSpeed(self,stringCurrentSpeed):
-        self.labelCurrentSpeed.config(text="Vitesse : " + '{0:.2f}'.format(stringCurrentSpeed) + " steps/s") 
-
-    def updateCurrentDirection(self,stringCurrentDirection):
+    def updateCurrentDirection(self, stringCurrentDirection):
         self.labelCurrentDirection.config(text="Direction : " + stringCurrentDirection)
 
-    def updateCurrentTemperature(self,floatCurrentTemperature):
-        self.labelCurrentTemp.config(text="Temperature ambiante : " + '{0:.2f}'.format(floatCurrentTemperature) + " °C") 
+    def updateCurrentTemperature(self, floatCurrentTemperature):
+        self.labelCurrentTemp.config(text="Temperature ambiante : " + '{0:.2f}'.format(floatCurrentTemperature) + " °C")
 
-    def updateCurrentOpening(self,floatCurrentOpening):
-        self.labelCurrentOpening.config(text="Ouverture de la porte : " + '{0:.0f}'.format(floatCurrentOpening) + " %") 
+    def updateCurrentOpening(self, floatCurrentOpening):
+        self.labelCurrentOpening.config(text="Ouverture de la porte : " + '{0:.0f}'.format(floatCurrentOpening) + " %")
         self.progressBarCurrentOpening['value'] = floatCurrentOpening
 
     def popup_error(self):
@@ -37,9 +36,8 @@ class Application(tk.Tk):
 
         button_close = tk.Button(window, text="Fermer", command=window.destroy)
         button_close.pack(fill='x')
-    
+
     def creer_widgets(self):
-        #Creating all the widgets with default values
         self.labelCurrentInfortmationSection = tk.Label(self, text="Informations courantes de la serre")
 
         stringCurrentTemp = str(0.0)
@@ -47,47 +45,46 @@ class Application(tk.Tk):
 
         stringCurrentOpening = str(0.0)
         self.labelCurrentOpening = tk.Label(self, text="Ouverture de la porte : " + stringCurrentOpening + " %")
-        
+
         self.labelCurrentControlSection = tk.Label(self, text="Contrôles")
-        
+
         self.buttonAutomatic = tk.Button(self, text="Automatique", command=setAutomaticTrue)
         self.buttonManual = tk.Button(self, text="Manuelle", command=setAutomaticFalse)
 
-        self.textManualPercentage = tk.Text(self, height = 1, width = 3)
+        self.textManualPercentage = tk.Text(self, height=1, width=3)
         self.labelPercentage = tk.Label(self, text=" % ")
-        self.progressBarCurrentOpening = ttk.Progressbar(self,orient='horizontal',mode='determinate',length=100,value=0,maximum = 100)
+        self.progressBarCurrentOpening = ttk.Progressbar(self, orient='horizontal', mode='determinate', length=100,
+                                                         value=0, maximum=100)
         self.progressBarCurrentOpening['value'] = stringCurrentOpening
-        
+
         self.buttonOpenMax = tk.Button(self, text="Ouvrir la porte", command=openDoorMax)
         self.buttonOpenMin = tk.Button(self, text="Fermer la porte", command=closeDoorMax)
-        
+
         self.labelMotorStateSection = tk.Label(self, text="Informations courantes sur le moteur")
 
         stringCurrentDirection = "Immobile"
-        self.labelCurrentDirection = tk.Label(self,text="Direction : " + stringCurrentDirection)
+        self.labelCurrentDirection = tk.Label(self, text="Direction : " + stringCurrentDirection)
 
         stringCurrentSpeed = str(0)
-        self.labelCurrentSpeed = tk.Label(self,text = "Vitesse : " + stringCurrentSpeed + " steps/s")
+        self.labelCurrentSpeed = tk.Label(self, text="Vitesse : " + stringCurrentSpeed + " steps/s")
 
-        #Packing all widgets in the frame
-        self.labelCurrentInfortmationSection.grid(column=5,row=0)
-        self.labelCurrentTemp.grid(column=5,row=1)
-        self.labelCurrentOpening.grid(column=5,row=2)
-        self.progressBarCurrentOpening.grid(column=5,row=3,pady=5)
-        self.labelCurrentControlSection.grid(column=5,row=4)
-        self.buttonAutomatic.grid(column=4,row=5)
-        self.buttonManual.grid(column=6,row=5)
-        self.textManualPercentage.grid(column=7,row=5)
-        self.labelPercentage.grid(column=8,row=5)
-        self.buttonOpenMax.grid(column=4,row=6)
-        self.buttonOpenMin.grid(column=6,row=6)
-        self.labelMotorStateSection.grid(column=5,row=7)
-        self.labelCurrentDirection.grid(column=4,row=8)
-        self.labelCurrentSpeed.grid(column=6,row=8)
+        self.labelCurrentInfortmationSection.grid(column=5, row=0)
+        self.labelCurrentTemp.grid(column=5, row=1)
+        self.labelCurrentOpening.grid(column=5, row=2)
+        self.progressBarCurrentOpening.grid(column=5, row=3, pady=5)
+        self.labelCurrentControlSection.grid(column=5, row=4)
+        self.buttonAutomatic.grid(column=4, row=5)
+        self.buttonManual.grid(column=6, row=5)
+        self.textManualPercentage.grid(column=7, row=5)
+        self.labelPercentage.grid(column=8, row=5)
+        self.buttonOpenMax.grid(column=4, row=6)
+        self.buttonOpenMin.grid(column=6, row=6)
+        self.labelMotorStateSection.grid(column=5, row=7)
+        self.labelCurrentDirection.grid(column=4, row=8)
+        self.labelCurrentSpeed.grid(column=6, row=8)
 
-        #Setting some labels to be underlined
         fontUnderlined = tkFont.Font(self.labelCurrentControlSection, self.labelCurrentControlSection.cget("font"))
-        fontUnderlined.configure(underline = True)
+        fontUnderlined.configure(underline=True)
         self.labelCurrentInfortmationSection.configure(font=fontUnderlined)
         self.labelCurrentControlSection.configure(font=fontUnderlined)
         self.labelMotorStateSection.configure(font=fontUnderlined)
@@ -101,14 +98,14 @@ def setAutomaticTrue():
     app.OuvrirPorte = False
     app.FermerPorte = False
     app.isAutomatic = True
-    
+
 
 def setAutomaticFalse():
     app.OuvrirPorte = False
     app.FermerPorte = False
     try:
-        app.ManualPercentage = float(app.textManualPercentage.get("1.0", "end-1c")) 
-        if app.ManualPercentage > 100.0 : 
+        app.ManualPercentage = float(app.textManualPercentage.get("1.0", "end-1c"))
+        if app.ManualPercentage > 100.0:
             app.ManualPercentage = 100.0
 
         if app.ManualPercentage < 10.0:
@@ -117,12 +114,14 @@ def setAutomaticFalse():
         app.isAutomatic = False
     except ValueError:
         app.popup_error()
-    
+
+
 def openDoorMax():
     app.isAutomatic = False
     app.ManualPercentage = 100.0
     app.OuvrirPorte = True
     app.FermerPorte = False
+
 
 def closeDoorMax():
     app.isAutomatic = False
@@ -130,9 +129,8 @@ def closeDoorMax():
     app.OuvrirPorte = False
     app.FermerPorte = True
 
+
 def setup():
     global app
     app = Application()
     app.title("Smart Door - TP1")
-    
-    
