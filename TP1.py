@@ -28,13 +28,8 @@ def setup():
 
     global distanceMax
 
-    listDistance = []
+    distanceMax = calculateDistance()
 
-    for i in range(5):
-        listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
-
-    distanceMax = statistics.median(listDistance)
-    # print("", distanceMax)
     communicateAzure()
 
 
@@ -52,12 +47,7 @@ def loop():
         if not FermerPorte:
             porteFermeeOuOuverte = False
 
-        listDistance = []
-
-        for i in range(5):
-            listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
-
-        distance = statistics.median(listDistance)
+        distance = calculateDistance()
         temperature = Thermistor.getTemperature()
         updateGUI(distance, temperature, "Immobile", 0.0)
 
@@ -69,12 +59,7 @@ def loop():
             elif temperature >= 35.0:
                 setDoor(distanceMax, 100.0)
         else:
-            # print("Mode Manuel active")
             setDoor(distanceMax, ManualPercentage)
-
-        # print("Temperature = %.2f C | Distance = %.2f cm" %(temperature, distance))
-        # Motor.moveSteps(3, 5, 1)
-
 
 def setDoor(distanceMax: float, pourcentage: float):
     global porteFermeeOuOuverte
@@ -102,16 +87,8 @@ def setDoor(distanceMax: float, pourcentage: float):
             direction = "Fermeture"
             vitesse = motorSpeed
 
-        listDistance = []
-
-        for _ in range(5):
-            listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
-
-        # print("check")
-        distanceActuelle = statistics.median(listDistance)
+        distanceActuelle = calculateDistance()
         updateGUI(distanceActuelle, temperature, direction, vitesse)
-        # print(distanceObjectif, " - ", pourcentage, "%")
-        # print(distanceActuelle, " - clean")
 
     if FermerPorte:
         porteFermeeOuOuverte = True
@@ -134,12 +111,7 @@ def communicateAzure():
     conn_str = "HostName=internetobjethubtest.azure-devices.net;DeviceId=collect_temperature;SharedAccessKey=AQK7Cua8C5xvyDbeWm2GBDbgsoVst4SHm5eKHUcTOa4="
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
 
-    listDistance = []
-
-    for i in range(5):
-        listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
-
-    distance = statistics.median(listDistance)
+    distance = calculateDistance()
 
     try:
         device_client.connect()
@@ -166,6 +138,13 @@ def communicateAzure():
 
     threading.Timer(60.0, communicateAzure).start()
 
+def calculateDistance() -> float:
+    listDistance = []
+
+    for i in range(5):
+        listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
+
+    return statistics.median(listDistance)
 
 def destroy():
     Thermistor.destroy()
