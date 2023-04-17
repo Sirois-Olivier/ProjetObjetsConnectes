@@ -1,0 +1,5 @@
+﻿.create table tableserre (temperature: double, distance: double, percentage: double)
+
+.create table tableserre ingestion json mapping 'FlatEventMapping' '[{"column":"temperature","Properties":{"path":"$.temperature"}},{"column":"distance","Properties":{"path":"$.distance"}},{"column":"percentage","Properties":{"path":"$.percentage"}}]'
+
+tableserre
