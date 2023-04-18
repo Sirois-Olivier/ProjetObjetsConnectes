@@ -9,6 +9,7 @@ import Thermistor
 import GUI
 import statistics
 import threading
+import datetime
 from azure.iot.device import IoTHubDeviceClient
 from azure.iot.device import Message
 
@@ -30,16 +31,14 @@ def setup():
 
     distanceMax = calculateDistance()
 
+   
+
     communicateAzure()
 
 
 def loop():
-    # time.sleep(5.0)
     global FermerPorte
     global porteFermeeOuOuverte
-
-    # while True:
-    #     print(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
 
     while True:
         isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
@@ -107,8 +106,9 @@ def updateGUI(distance: float, temperature: float, direction: str, vitesse: floa
         GPIO.cleanup()
 
 
-def communicateAzure():
-    conn_str = "HostName=internetobjethubtest.azure-devices.net;DeviceId=collect_temperature;SharedAccessKey=AQK7Cua8C5xvyDbeWm2GBDbgsoVst4SHm5eKHUcTOa4="
+def communicateAzure(): 
+    global threadAzure
+    conn_str = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=efp2nyB4LKexQqL7qaCeYEvjfOVa1qUp4jCQxXuzmvs="
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
 
     distance = calculateDistance()
@@ -117,8 +117,10 @@ def communicateAzure():
         device_client.connect()
         data = {
             "temperature": Thermistor.getTemperature(),
-            "pourcentageOuverturePorte": (distance - 5.0) / (distanceMax - 5.0) * 100.0,
-            "distance": distance
+            "percentageDoorOpen": (distance - 5.0) / (distanceMax - 5.0) * 100.0,
+            "distance": distance,
+            "dateTime": datetime.datetime.now().time().isoformat() # Source: https://stackoverflow.com/questions/10197859/python-serializing-deserializing-datetime-time
+            
         }
         msg = Message(json.dumps(data))
         msg.message_id = uuid.uuid4()
@@ -126,7 +128,7 @@ def communicateAzure():
         msg.custom_properties["tornado-warning"] = "yes"
         msg.content_encoding = "utf-8"
         msg.content_type = "application/json"
-        print("sending message")
+        print("sending message", data)
         device_client.send_message(msg)
     except KeyboardInterrupt:
         print("user exit")
@@ -136,7 +138,7 @@ def communicateAzure():
     finally:
         device_client.shutdown()
 
-    threading.Timer(60.0, communicateAzure).start()
+    threadAzure = threading.Timer(60.0, communicateAzure).start()
 
 def calculateDistance() -> float:
     listDistance = []
@@ -159,3 +161,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:  # Press ctrl-c to end the program.
         destroy()
         GPIO.cleanup()
+        

@@ -1,5 +1,5 @@
-﻿.create table tableserre (temperature: double, distance: double, percentage: double)
+﻿.create table tableserre (dateTime: datetime, temperature: double, distance: double, percentageDoorOpen: double)
 
-.create table tableserre ingestion json mapping 'FlatEventMapping' '[{"column":"temperature","Properties":{"path":"$.temperature"}},{"column":"distance","Properties":{"path":"$.distance"}},{"column":"percentage","Properties":{"path":"$.percentage"}}]'
+.create table tableserre ingestion json mapping 'jsonmappingserre' '[{"column":"dateTime","Properties":{"path":"$.dateTime"}},{"column":"temperature","Properties":{"path":"$.temperature"}},{"column":"distance","Properties":{"path":"$.distance"}},{"column":"percentageDoorOpen","Properties":{"path":"$.percentageDoorOpen"}}]'
 
 tableserre
