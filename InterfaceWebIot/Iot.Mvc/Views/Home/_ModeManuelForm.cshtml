@@ -1,0 +1,9 @@
+﻿@using Iot.Mvc.Models
+@model ModeManuelFormModel
+
+@using (Html.BeginForm("SendMessageManualDoor", "Home", FormMethod.Post))
+{
+    <span>Pourcentage d'ouverture de la porte:</span> @Html.TextBoxFor(m => m.pourcentageOuverture)
+    <br />
+    <input class="btn btn-default" id="Submit" type="submit" value="Activer Mode Manuel" />
+}

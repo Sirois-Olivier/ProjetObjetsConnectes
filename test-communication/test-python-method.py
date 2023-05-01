@@ -2,6 +2,7 @@ import time
 import datetime
 from azure.iot.device import IoTHubDeviceClient, MethodResponse
 
+
 CONNECTION_STRING = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=BDWKJV/+KR6BKaWZsIHGdThmvT/jFy5Wi91ZxSstolQ="
 
 def create_client():

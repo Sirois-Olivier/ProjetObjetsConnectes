@@ -3,10 +3,12 @@ import RPi.GPIO as GPIO
 import uuid
 import time
 import math
+import ReceivedMessageManager
 import Motor
 import UltrasonicSensor
 import Thermistor
 import GUI
+import MySqlConnector
 import statistics
 import threading
 import datetime
@@ -16,9 +18,12 @@ from azure.iot.device import Message
 porteFermeeOuOuverte = False
 
 
+
+
 def setup():
     global motorSpeed
-
+    global receivedMessageManager
+    receivedMessageManager = ReceivedMessageManager.ReceivedMessageManager()
     motorSpeed = (5 / 3) * 1000
     print(motorSpeed)
 
@@ -31,9 +36,9 @@ def setup():
 
     distanceMax = calculateDistance()
 
-   
-
     communicateAzure()
+    
+    
 
 
 def loop():
@@ -41,6 +46,10 @@ def loop():
     global porteFermeeOuOuverte
 
     while True:
+        if(receivedMessageManager.GetMessageEnCours() != ""):
+            print(receivedMessageManager.GetMessageEnCours())
+            receivedMessageManager.SetMessageEnCours("")
+
         isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
 
         if not FermerPorte:
@@ -119,7 +128,7 @@ def communicateAzure():
             "temperature": Thermistor.getTemperature(),
             "percentageDoorOpen": (distance - 5.0) / (distanceMax - 5.0) * 100.0,
             "distance": distance,
-            "dateTime": datetime.datetime.now().time().isoformat() # Source: https://stackoverflow.com/questions/10197859/python-serializing-deserializing-datetime-time
+            "dateTime": f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}'
             
         }
         msg = Message(json.dumps(data))
@@ -129,16 +138,17 @@ def communicateAzure():
         msg.content_encoding = "utf-8"
         msg.content_type = "application/json"
         print("sending message", data)
+        MySqlConnector.saveDataSerre(data)
         device_client.send_message(msg)
     except KeyboardInterrupt:
         print("user exit")
     except Exception:
         print("Error")
-        raise
     finally:
         device_client.shutdown()
 
-    threadAzure = threading.Timer(60.0, communicateAzure).start()
+
+    threadAzure = threading.Timer(5.0, communicateAzure).start()
 
 def calculateDistance() -> float:
     listDistance = []
@@ -160,5 +170,6 @@ if __name__ == "__main__":
         loop()
     except KeyboardInterrupt:  # Press ctrl-c to end the program.
         destroy()
+        receivedMessageManager.client.shutdown()
         GPIO.cleanup()
         
