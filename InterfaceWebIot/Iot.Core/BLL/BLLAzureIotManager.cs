@@ -9,17 +9,18 @@ namespace Iot.Core.BLL
 {
     public class BLLAzureIotManager
     {
-        public async Task SendMessageToAzure()
+        public Task SendMessageToAzure()
         {
             ServiceClient srv;
-            string connectionString = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=BDWKJV/+KR6BKaWZsIHGdThmvT/jFy5Wi91ZxSstolQ=";
+            string connectionString = "HostName=iothubserre.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=rYaRsuzeuUj8+SS5sHGZeToGym+Mdm6dMNYIKwmilBc=";
             string targetDevice = "deviceserre";
 
-            var msg = new Message(Encoding.ASCII.GetBytes("Cloud to device message."));
             srv = ServiceClient.CreateFromConnectionString(connectionString);
-            await srv.SendAsync(targetDevice, msg);
+            CloudToDeviceMethod method = new CloudToDeviceMethod("Open");
+            method.ResponseTimeout = TimeSpan.FromSeconds(30);
 
-            
+            return srv.InvokeDeviceMethodAsync(targetDevice, method);
+
         }
     }
 }
