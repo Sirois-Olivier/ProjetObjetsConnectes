@@ -1,11 +1,22 @@
 ﻿
-function SendMessage() {
+function SendMessageOpenDoor() {
 
     $.ajax({
         type: "POST",
-        url: '/Home/SendMessage',
+        url: '/Home/SendMessageOpenDoor',
         data: { },
-        contentType: "application/json; charset=utf-8",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         dataType: "json"
     })
 }
+
+function SendMessageCloseDoor() {
+    $.ajax({
+        type: "POST",
+        url: '/Home/SendMessageCloseDoor',
+        data: {},
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+        dataType: "json"
+    })
+}
+

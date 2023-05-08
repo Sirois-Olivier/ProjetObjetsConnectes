@@ -9,19 +9,36 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
         <h2>Ouvrir la porte</h2>
         <p>Permet d'ouvrir la porte de la serre.</p>
-        <p><button class="btn btn-default" onclick="SendMessage()">Ouvrir</button></p>
+        <p><button class="btn btn-default" onclick="SendMessageOpenDoor()">Ouvrir</button></p>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
         <h2>Fermer la porte</h2>
         <p>Permet de fermer la porte de la serre.</p>
-        <p><button class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Fermer</button></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Température</h2>
-        <p>Voir la température du système</p>
-        <p><button class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Température</button></p>
+        <p><button class="btn btn-default" onclick="SendMessageCloseDoor()">Fermer</button></p>
+        
     </div>
 </div>
+<br />
+
+
+<div class="row">
+    <div class="col-md-5">
+        <h2>Mode Manuel</h2>
+        <p>Modifier l'ouverture de la porte manuellement (en %)</p>
+        <div id="ManualForm"></div>
+    </div>
+    <div class="col-md-5">
+        <h2>Mode Automatique</h2>
+        <p>Modifier l'ouverture de la porte automatique. Cela désactivera le mode automatique.</p>
+        <p><button class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Activer Mode Automatique</button></p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ManualForm').load('/Home/ModeManuelForm');
+    });
+</script> 
