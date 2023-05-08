@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
+
 trigPin = 16
 echoPin = 36
 MAX_DISTANCE = 220
