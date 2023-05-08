@@ -36,11 +36,7 @@ def setup():
 
     distanceMax = calculateDistance()
 
-<<<<<<< HEAD
     #communicateAzure()
-=======
-    communicateAzure()
->>>>>>> 9777788ba4754d6ea9722c502686054bab0a2774
     
     
 
@@ -53,11 +49,6 @@ def loop():
         if(receivedMessageManager.GetMessageEnCours() != ""):
             print(receivedMessageManager.GetMessageEnCours())
             receivedMessageManager.SetMessageEnCours("")
-<<<<<<< HEAD
-=======
-
-        isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
->>>>>>> 9777788ba4754d6ea9722c502686054bab0a2774
 
         isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
 

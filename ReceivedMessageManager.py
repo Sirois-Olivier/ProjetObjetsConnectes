@@ -22,13 +22,9 @@ class ReceivedMessageManager:
         self.client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
         # Define the handler for method requests
         def method_request_handler(method_request):
-<<<<<<< HEAD
             request = str(method_request.name).split(",")
 
             if request[0] == "Open":
-=======
-            if method_request.name == "Open":
->>>>>>> 9777788ba4754d6ea9722c502686054bab0a2774
 
                 self.messageEnCours = "Open"
 
@@ -37,11 +33,7 @@ class ReceivedMessageManager:
                 resp_payload = {"Response": "This is the response from the device"}
                 method_response = MethodResponse(method_request.request_id, resp_status, resp_payload)
 
-<<<<<<< HEAD
             elif request[0] == "Close":
-=======
-            elif method_request.name == "Close":
->>>>>>> 9777788ba4754d6ea9722c502686054bab0a2774
 
                 self.messageEnCours = "Close"
 
@@ -49,7 +41,6 @@ class ReceivedMessageManager:
                 resp_status = 200
                 resp_payload = {"Response": "This is the response from the device"}
                 method_response = MethodResponse(method_request.request_id, resp_status, resp_payload)
-<<<<<<< HEAD
             
             elif request[0] == "Manuel":
 
@@ -59,8 +50,6 @@ class ReceivedMessageManager:
                 resp_status = 200
                 resp_payload = {"Response": "This is the response from the device"}
                 method_response = MethodResponse(method_request.request_id, resp_status, resp_payload)
-=======
->>>>>>> 9777788ba4754d6ea9722c502686054bab0a2774
 
             else:
                 # Create a method response indicating the method request was for an unknown method
