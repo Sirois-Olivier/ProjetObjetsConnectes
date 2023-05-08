@@ -22,7 +22,9 @@ class ReceivedMessageManager:
         self.client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
         # Define the handler for method requests
         def method_request_handler(method_request):
-            if method_request.name == "Open":
+            request = str(method_request.name).split(",")
+
+            if request[0] == "Open":
 
                 self.messageEnCours = "Open"
 
@@ -31,9 +33,18 @@ class ReceivedMessageManager:
                 resp_payload = {"Response": "This is the response from the device"}
                 method_response = MethodResponse(method_request.request_id, resp_status, resp_payload)
 
-            elif method_request.name == "Close":
+            elif request[0] == "Close":
 
                 self.messageEnCours = "Close"
+
+                # Create a method response indicating the method request was resolved
+                resp_status = 200
+                resp_payload = {"Response": "This is the response from the device"}
+                method_response = MethodResponse(method_request.request_id, resp_status, resp_payload)
+            
+            elif request[0] == "Manuel":
+
+                self.messageEnCours = request[0] + " -> " + request[1]
 
                 # Create a method response indicating the method request was resolved
                 resp_status = 200

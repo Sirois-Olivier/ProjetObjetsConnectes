@@ -36,7 +36,7 @@ def setup():
 
     distanceMax = calculateDistance()
 
-    communicateAzure()
+    #communicateAzure()
     
     
 
@@ -51,9 +51,6 @@ def loop():
             receivedMessageManager.SetMessageEnCours("")
 
         isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
-
-        if not FermerPorte:
-            porteFermeeOuOuverte = False
 
         distance = calculateDistance()
         temperature = Thermistor.getTemperature()
@@ -70,7 +67,7 @@ def loop():
             setDoor(distanceMax, ManualPercentage)
 
 def setDoor(distanceMax: float, pourcentage: float):
-    global porteFermeeOuOuverte
+    global FermerPorte
 
     distanceActuelle = float('{0:.2f}'.format(UltrasonicSensor.getDistance()))
     distanceObjectif = float('{0:.2f}'.format(distanceMax * (float('{0:.2f}'.format(pourcentage)) / 100.0)))
@@ -79,7 +76,7 @@ def setDoor(distanceMax: float, pourcentage: float):
 
     updateGUI(distanceActuelle, temperature, "Immobile", 0.0)
     while not (distanceObjectif - 0.5 <= distanceActuelle <= distanceObjectif + 0.5):
-        if porteFermeeOuOuverte:
+        if FermerPorte:
             break
 
         temperature = Thermistor.getTemperature()
