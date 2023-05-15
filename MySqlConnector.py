@@ -18,3 +18,25 @@ def saveDataSerre(data: dict):
     conn.commit() 
 
     conn.close()
+
+def loadDataSerre():
+    
+    conn = mariadb.connect(
+        user="python_user",
+        password="python_pwd",
+        host="localhost",
+        database="BD_Serre_Locale")
+    cur = conn.cursor()
+
+    try: 
+        cur.execute("SELECT * FROM donneesSerre")
+    except mariadb.Error as e: 
+        print(f"Error: {e}")
+
+    list_of_tuples_MySQL = []
+    for (row) in cur:
+        list_of_tuples_MySQL.append(row)
+    
+    conn.close()
+
+    return list_of_tuples_MySQL   
