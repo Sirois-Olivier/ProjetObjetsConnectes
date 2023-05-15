@@ -1,4 +1,5 @@
 ﻿using Iot.Core.BLL;
+using Iot.Core.DAL;
 using Iot.Mvc.Models;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,14 @@ namespace Iot.Mvc.Controllers
 
         public ActionResult About()
         {
-            return View();
+            new DALKusto().getData();
+
+            var model = new TableauDeBordModel();
+
+            model.lstHeure = new List<string> { "1", "2", "3" };
+            model.lstTemprature = new List<string> { "3", "2", "1" };
+
+            return View(model);
         }
 
         public ActionResult ModeManuelForm()
