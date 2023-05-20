@@ -20,3 +20,13 @@ function SendMessageCloseDoor() {
     })
 }
 
+function SendMessageSetAutomatic() {
+    $.ajax({
+        type: "POST",
+        url: '/Home/SendMessageSetAutomatic',
+        data: {},
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+        dataType: "json"
+    })
+}
+

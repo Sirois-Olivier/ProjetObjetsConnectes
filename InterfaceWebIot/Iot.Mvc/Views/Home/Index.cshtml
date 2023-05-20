@@ -3,9 +3,16 @@
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h2>État actuel de la serre</h2>
+    <p></p>
+    <p class="lead">Température :</p>
+    <p></p>
+    <p class="lead">Pourcentage d'ouverture de la porte :</p>
+    <p></p>
+    <p></p>
+    <p><div id="timer"></div></p>
+    <p></p>
+    <p><button class="btn btn-default">Actualiser</button></p>
 </div>
 
 <div class="row">
@@ -33,7 +40,7 @@
     <div class="col-md-5">
         <h2>Mode Automatique</h2>
         <p>Modifier l'ouverture de la porte automatique. Cela désactivera le mode automatique.</p>
-        <p><button class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Activer Mode Automatique</button></p>
+        <p><button class="btn btn-default" onclick="SendMessageSetAutomatic()">Activer Mode Automatique</button></p>
     </div>
 </div>
 
@@ -41,4 +48,22 @@
     $(document).ready(function () {
         $('#ManualForm').load('/Home/ModeManuelForm');
     });
+
+    var temps = 0; 
+
+    // Inspiré de https://www.w3schools.com/howto/howto_js_countdown.asp
+    var x = setInterval(function () {
+
+        temps = temps + 1
+
+        if (temps >= 60) {
+            document.getElementById("timer").innerHTML = "Dernière actualisation : Il y a " + Math.floor(temps / 60) + " minute(s)";
+        } else {
+            document.getElementById("timer").innerHTML = "Dernière actualisation : Il y a " + temps + " seconde(s)";
+        }
+        
+
+    }, 1000);
+
 </script> 
+

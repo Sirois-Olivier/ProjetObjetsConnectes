@@ -18,8 +18,6 @@ from azure.iot.device import Message
 porteFermeeOuOuverte = False
 
 
-
-
 def setup():
     global motorSpeed
     global receivedMessageManager
@@ -38,19 +36,17 @@ def setup():
 
     #communicateAzure()
     
-    
-
 
 def loop():
     global FermerPorte
     global porteFermeeOuOuverte
 
     while True:
-        if(receivedMessageManager.GetMessageEnCours() != ""):
-            print(receivedMessageManager.GetMessageEnCours())
-            receivedMessageManager.SetMessageEnCours("")
-
-        isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
+        if receivedMessageManager.GetMessageEnCours() is not None:
+            isAutomatic, ManualPercentage, FermerPorte = receivedMessageManager.GetMessageEnCours()
+            receivedMessageManager.SetMessageEnCours(None)
+        else:
+            isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
 
         distance = calculateDistance()
         temperature = Thermistor.getTemperature()
@@ -65,6 +61,7 @@ def loop():
                 setDoor(distanceMax, 100.0)
         else:
             setDoor(distanceMax, ManualPercentage)
+
 
 def setDoor(distanceMax: float, pourcentage: float):
     global FermerPorte
@@ -147,6 +144,7 @@ def communicateAzure():
 
     threadAzure = threading.Timer(5.0, communicateAzure).start()
 
+
 def calculateDistance() -> float:
     listDistance = []
 
@@ -154,6 +152,7 @@ def calculateDistance() -> float:
         listDistance.append(float('{0:.2f}'.format(UltrasonicSensor.getDistance())))
 
     return statistics.median(listDistance)
+
 
 def destroy():
     Thermistor.destroy()

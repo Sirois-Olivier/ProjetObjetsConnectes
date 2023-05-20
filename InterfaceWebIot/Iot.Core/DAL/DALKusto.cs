@@ -11,15 +11,17 @@ using System.Threading.Tasks;
 
 namespace Iot.Core.DAL
 {
-    public class DALKusto
+    public static class DALKusto
     {
-        public void getData()
-        {
-            var client = Kusto.Data.Net.Client.KustoClientFactory.CreateCslQueryProvider("https://clusterserre.eastus2.kusto.windows.net/databaseserre;Fed=true");
+        static KustoConnectionStringBuilder builder = new KustoConnectionStringBuilder("https://clusterserre.eastus2.kusto.windows.net/databaseserre").WithAadUserPromptAuthentication();
+
+        public static void GetData()
+        { 
+            var client = Kusto.Data.Net.Client.KustoClientFactory.CreateCslQueryProvider(builder);
             var reader = client.ExecuteQuery("tableserre | count");
 
             reader.Close();
-              
+
         }  
     }
 }

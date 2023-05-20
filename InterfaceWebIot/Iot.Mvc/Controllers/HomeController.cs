@@ -18,7 +18,7 @@ namespace Iot.Mvc.Controllers
 
         public ActionResult About()
         {
-            new DALKusto().getData();
+            DALKusto.GetData();
 
             var model = new TableauDeBordModel();
 
@@ -54,6 +54,13 @@ namespace Iot.Mvc.Controllers
         {
             BLLAzureIotManager bLLAzureIotManager = new BLLAzureIotManager();
             bLLAzureIotManager.SendMessageToAzure("Close", "").Wait();
+        }
+
+        [HttpPost]
+        public void SendMessageSetAutomatic()
+        {
+            BLLAzureIotManager bLLAzureIotManager = new BLLAzureIotManager();
+            bLLAzureIotManager.SendMessageToAzure("Automatique", "").Wait();
         }
     }
 }
