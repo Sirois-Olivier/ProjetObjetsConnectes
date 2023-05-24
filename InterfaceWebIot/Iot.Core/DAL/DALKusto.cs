@@ -17,10 +17,10 @@ namespace Iot.Core.DAL
 
         public static void GetData()
         { 
-            var client = Kusto.Data.Net.Client.KustoClientFactory.CreateCslQueryProvider(builder);
-            var reader = client.ExecuteQuery("tableserre | count");
+            //var client = Kusto.Data.Net.Client.KustoClientFactory.CreateCslQueryProvider(builder);
+            //var reader = client.ExecuteQuery("tableserre | count");
 
-            reader.Close();
+            //reader.Close();
 
         }  
     }

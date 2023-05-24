@@ -11,12 +11,12 @@ namespace Iot.Mvc.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Accueil()
         {
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult TableauDeBord()
         {
             DALKusto.GetData();
 
@@ -39,7 +39,7 @@ namespace Iot.Mvc.Controllers
             BLLAzureIotManager bLLAzureIotManager = new BLLAzureIotManager();
             bLLAzureIotManager.SendMessageToAzure("Manuel", model.pourcentageOuverture).Wait();
 
-            return View("Index");
+            return View("Accueil");
         }
 
         [HttpPost]

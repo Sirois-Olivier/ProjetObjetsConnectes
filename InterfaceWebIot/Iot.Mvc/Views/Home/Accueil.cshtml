@@ -12,7 +12,7 @@
     <p></p>
     <p><div id="timer"></div></p>
     <p></p>
-    <p><button class="btn btn-default">Actualiser</button></p>
+    <p><button id="RefreshPage" class="btn btn-default">Actualiser</button></p>
 </div>
 
 <div class="row">
@@ -47,6 +47,12 @@
 <script>
     $(document).ready(function () {
         $('#ManualForm').load('/Home/ModeManuelForm');
+    });
+
+    $(document).ready(function () {
+        $('#RefreshPage').click(function () {
+            window.location.reload();
+        });
     });
 
     var temps = 0; 

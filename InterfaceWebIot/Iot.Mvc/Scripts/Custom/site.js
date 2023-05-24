@@ -30,3 +30,5 @@ function SendMessageSetAutomatic() {
     })
 }
 
+function ActualizeHomePage() 
+
