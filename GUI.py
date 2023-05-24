@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 import tkinter.font as tkFont
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from MySqlConnector import loadDataSerre
 
 
 class Application(tk.Tk):
@@ -68,6 +72,9 @@ class Application(tk.Tk):
         stringCurrentSpeed = str(0)
         self.labelCurrentSpeed = tk.Label(self, text="Vitesse : " + stringCurrentSpeed + " steps/s")
 
+        self.buttonGraph = tk.Button(self, text='Tableau de bord', command=graph)
+
+
         self.labelCurrentInfortmationSection.grid(column=5, row=0)
         self.labelCurrentTemp.grid(column=5, row=1)
         self.labelCurrentOpening.grid(column=5, row=2)
@@ -82,7 +89,8 @@ class Application(tk.Tk):
         self.labelMotorStateSection.grid(column=5, row=7)
         self.labelCurrentDirection.grid(column=4, row=8)
         self.labelCurrentSpeed.grid(column=6, row=8)
-
+        self.buttonGraph.grid(column=4, row=9)
+        
         fontUnderlined = tkFont.Font(self.labelCurrentControlSection, self.labelCurrentControlSection.cget("font"))
         fontUnderlined.configure(underline=True)
         self.labelCurrentInfortmationSection.configure(font=fontUnderlined)
@@ -128,9 +136,39 @@ def closeDoorMax():
     app.ManualPercentage = 10.0
     app.OuvrirPorte = False
     app.FermerPorte = True
-
+    
+def graph():
+    
+    serreDataTuple = loadDataSerre()
+    
+    listTemperature = []
+    listDatetime = []
+    for i in serreDataTuple:
+        print(i[1],i[4])
+        listTemperature.append(i[1])
+        listDatetime.append(i[4].strftime("%d/%m/%Y, %H:%M:%S"))
+    print(listDatetime)
+    data = {'temperature': listTemperature,
+        'temps': listDatetime
+       }
+    df = pd.DataFrame(data)  
+    plt.plot(df['temps'], df['temperature'], marker='o')
+    plt.title('Variation de la température en fonction du temps', fontsize=14)
+    plt.xlabel('Dates', fontsize=14)
+    plt.ylabel('Température en ℃', fontsize=14)
+    plt.grid(True)
+    plt.xticks(rotation=90)
+    plt.margins(0.2)
+    plt.subplots_adjust(top=0.918,bottom=0.416,left=0.127,right=0.977)
+    plt.show()
 
 def setup():
     global app
     app = Application()
     app.title("Smart Door - TP1")
+
+#def main():
+#    setup()
+
+#if __name__ == "__main__":
+#    main()
