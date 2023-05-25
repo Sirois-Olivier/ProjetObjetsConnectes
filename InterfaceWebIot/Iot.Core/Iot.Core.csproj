@@ -186,6 +186,7 @@
     <Compile Include="BLL\BLLAzureIotManager.cs" />
     <Compile Include="BLL\BLLKusto.cs" />
     <Compile Include="DAL\DALKusto.cs" />
+    <Compile Include="DLL\DLLTemperatureDate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

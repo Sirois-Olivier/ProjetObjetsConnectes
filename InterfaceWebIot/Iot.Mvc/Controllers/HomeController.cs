@@ -1,5 +1,6 @@
 ﻿using Iot.Core.BLL;
 using Iot.Core.DAL;
+using Iot.Core.DLL;
 using Iot.Mvc.Models;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,27 @@ namespace Iot.Mvc.Controllers
 
         public ActionResult TableauDeBord()
         {
-            DALKusto.GetData();
+
+            DLLTemperatureDate dLLTemperatureDate = DALKusto.GetData();
 
             var model = new TableauDeBordModel();
 
-            model.lstHeure = new List<string> { "1", "2", "3" };
-            model.lstTemprature = new List<string> { "3", "2", "1" };
+            List<string> lstDateTemp = new List<string>();
+
+            foreach (var date in dLLTemperatureDate.lstTemperatureDate)
+            {
+                lstDateTemp.Add(date.date.ToString());
+            }
+
+            List<string> lstTemperatureTemp = new List<string>();
+
+            foreach (var temperature in dLLTemperatureDate.lstTemperatureDate)
+            {
+                lstTemperatureTemp.Add(Math.Floor(temperature.temperature).ToString());
+            }
+
+            model.lstHeure = lstDateTemp;
+            model.lstTemprature = lstTemperatureTemp;
 
             return View(model);
         }

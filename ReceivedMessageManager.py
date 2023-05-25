@@ -83,7 +83,7 @@ if __name__ == "__main__":
     test = ReceivedMessageManager()
     try:
         while True:
-            i  = 1
+            i = 1
     except KeyboardInterrupt:
         print("Stop")
 
