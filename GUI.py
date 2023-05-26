@@ -24,7 +24,7 @@ class Application(tk.Tk):
         self.labelCurrentDirection.config(text="Direction : " + stringCurrentDirection)
 
     def updateCurrentTemperature(self, floatCurrentTemperature):
-        self.labelCurrentTemp.config(text="Temperature ambiante : " + '{0:.2f}'.format(floatCurrentTemperature) + " °C")
+        self.labelCurrentTemp.config(text="Température ambiante : " + '{0:.2f}'.format(floatCurrentTemperature) + " °C")
 
     def updateCurrentOpening(self, floatCurrentOpening):
         self.labelCurrentOpening.config(text="Ouverture de la porte : " + '{0:.0f}'.format(floatCurrentOpening) + " %")
