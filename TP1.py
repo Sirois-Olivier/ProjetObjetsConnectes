@@ -111,7 +111,7 @@ def updateGUI(distance: float, temperature: float, direction: str, vitesse: floa
 
 def communicateAzure(): 
     global threadAzure
-    conn_str = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=BDWKJV/+KR6BKaWZsIHGdThmvT/jFy5Wi91ZxSstolQ="
+    conn_str = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=bSyoNmN6YQ1E4QnviMOoZd0B1jnHhWzdJJ0npmcc4WM"
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
 
     distance = calculateDistance()

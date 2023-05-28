@@ -2,7 +2,7 @@ import time
 import datetime
 from azure.iot.device import IoTHubDeviceClient, MethodResponse
 
-CONNECTION_STRING = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=BDWKJV/+KR6BKaWZsIHGdThmvT/jFy5Wi91ZxSstolQ="
+CONNECTION_STRING = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=bSyoNmN6YQ1E4QnviMOoZd0B1jnHhWzdJJ0npmcc4WM="
 
 
 class ReceivedMessageManager:
