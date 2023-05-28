@@ -22,7 +22,7 @@ namespace Iot.Core.DAL
 
         public static DLLTemperatureDate GetData()
         {
-
+            // Code de base
             //var client = Kusto.Data.Net.Client.KustoClientFactory.CreateCslQueryProvider(builder);
             //var query = $@"tableserre | count";
             //var reader = client.ExecuteQuery(query);
@@ -31,7 +31,7 @@ namespace Iot.Core.DAL
 
             //reader.Close();
 
-        
+            // s'il y a un problème technique
             string jsonString = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/donneesSimulees.json");
 
             DLLTemperatureDate dLLTemperatureDate = JsonSerializer.Deserialize<DLLTemperatureDate>(jsonString);
