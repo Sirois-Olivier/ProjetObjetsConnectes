@@ -34,7 +34,7 @@ def setup():
 
     distanceMax = calculateDistance()
 
-    #communicateAzure()
+    communicateAzure()
     
 
 def loop():
@@ -44,6 +44,8 @@ def loop():
     while True:
         if receivedMessageManager.GetMessageEnCours() is not None:
             isAutomatic, ManualPercentage, FermerPorte = receivedMessageManager.GetMessageEnCours()
+            print(isAutomatic)
+            print(ManualPercentage)
             receivedMessageManager.SetMessageEnCours(None)
         else:
             isAutomatic, ManualPercentage, FermerPorte = GUI.getInformationGUI()
@@ -111,13 +113,33 @@ def updateGUI(distance: float, temperature: float, direction: str, vitesse: floa
 
 def communicateAzure(): 
     global threadAzure
-    conn_str = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=bSyoNmN6YQ1E4QnviMOoZd0B1jnHhWzdJJ0npmcc4WM"
-    device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
-
-    distance = calculateDistance()
-
+    
     try:
+        conn_str = "HostName=iothubserre.azure-devices.net;DeviceId=deviceserre;SharedAccessKey=bSyoNmN6YQ1E4QnviMOoZd0B1jnHhWzdJJ0npmcc4WM"
+        device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
         device_client.connect()
+        distance = calculateDistance()
+
+        lstDataASynchroniser = MySqlConnector.loadDataSerreASynchronizer()
+
+        for dataASynchroniser in lstDataASynchroniser:
+            data = {
+                "temperature": dataASynchroniser[1],
+                "percentageDoorOpen": dataASynchroniser[2],
+                "distance": dataASynchroniser[3],
+                "dateTime": dataASynchroniser[4]
+            }
+            msg = Message(json.dumps(data))
+            msg.message_id = uuid.uuid4()
+            msg.correlation_id = "correlation-1234"
+            msg.custom_properties["tornado-warning"] = "yes"
+            msg.content_encoding = "utf-8"
+            msg.content_type = "application/json"
+            print("sending message", data)
+            device_client.send_message(msg)
+
+        MySqlConnector.clearDataSerreASynchronizer()
+        
         data = {
             "temperature": Thermistor.getTemperature(),
             "percentageDoorOpen": (distance - 5.0) / (distanceMax - 5.0) * 100.0,
@@ -134,15 +156,22 @@ def communicateAzure():
         print("sending message", data)
         MySqlConnector.saveDataSerre(data)
         device_client.send_message(msg)
+        device_client.shutdown()
     except KeyboardInterrupt:
         print("user exit")
     except Exception:
-        print("Error")
-    finally:
-        device_client.shutdown()
-
-
-    threadAzure = threading.Timer(5.0, communicateAzure).start()
+        distance = calculateDistance()
+        data = {
+            "temperature": Thermistor.getTemperature(),
+            "percentageDoorOpen": (distance - 5.0) / (distanceMax - 5.0) * 100.0,
+            "distance": distance,
+            "dateTime": f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}'
+            
+        }
+        MySqlConnector.saveDataSerre(data)
+        MySqlConnector.saveDataSerreASynchroniser(data)
+    finally :
+        threadAzure = threading.Timer(60.0, communicateAzure).start()
 
 
 def calculateDistance() -> float:
