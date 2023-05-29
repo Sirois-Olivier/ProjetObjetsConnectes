@@ -13,7 +13,7 @@ namespace Iot.Core.BLL
         public Task SendMessageToAzure(string method, string param)
         {
             ServiceClient srv;
-            string connectionString = "HostName=iothubserre.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=JzpwXJnGtBZsH5BS5iteq/GoGvwGbuHMLrjFBQ+nzjg=";
+            string connectionString = "HostName=iothubserre.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=qm/Vxvj0/41A6Nssx0UYy1pie8DhzLG3t8qCr2hSelc=";
             string targetDevice = "deviceserre";
 
             srv = ServiceClient.CreateFromConnectionString(connectionString);
