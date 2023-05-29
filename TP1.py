@@ -170,7 +170,7 @@ def communicateAzure():
         }
         MySqlConnector.saveDataSerre(data)
         MySqlConnector.saveDataSerreASynchroniser(data)
-    finally :
+    finally:
         threadAzure = threading.Timer(60.0, communicateAzure).start()
 
 
