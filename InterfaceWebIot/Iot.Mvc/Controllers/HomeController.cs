@@ -14,26 +14,34 @@ namespace Iot.Mvc.Controllers
     {
         public ActionResult Accueil()
         {
-            return View();
+            DLLTemperaturePourcentageDate dLLTemperaturePourcentageDate = DALKusto.GetDataTableauDeBord();
+            var model = new AccueilModel();
+
+            var temperaturePourcentageDate = dLLTemperaturePourcentageDate.lstTemperaturePourcentageDate[dLLTemperaturePourcentageDate.lstTemperaturePourcentageDate.Count - 1];
+
+            model.pourcentage = temperaturePourcentageDate.pourcentage;
+            model.temperature = temperaturePourcentageDate.temperature;
+
+            return View(model);
         }
 
         public ActionResult TableauDeBord()
         {
 
-            DLLTemperatureDate dLLTemperatureDate = DALKusto.GetData();
+            DLLTemperaturePourcentageDate dLLTemperaturePourcentageDate = DALKusto.GetDataTableauDeBord();
 
             var model = new TableauDeBordModel();
 
             List<string> lstDateTemp = new List<string>();
 
-            foreach (var date in dLLTemperatureDate.lstTemperatureDate)
+            foreach (var date in dLLTemperaturePourcentageDate.lstTemperaturePourcentageDate)
             {
                 lstDateTemp.Add(date.date.ToString());
             }
 
             List<string> lstTemperatureTemp = new List<string>();
 
-            foreach (var temperature in dLLTemperatureDate.lstTemperatureDate)
+            foreach (var temperature in dLLTemperaturePourcentageDate.lstTemperaturePourcentageDate)
             {
                 lstTemperatureTemp.Add(Math.Floor(temperature.temperature).ToString());
             }

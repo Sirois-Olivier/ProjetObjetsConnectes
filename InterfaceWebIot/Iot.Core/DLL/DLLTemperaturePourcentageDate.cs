@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace Iot.Core.DLL
 {
-    public class DLLTemperatureDate
+    public class DLLTemperaturePourcentageDate
     {
-        public List<DLLTemperatureDateItem> lstTemperatureDate { get; set; }
+        public List<DLLTemperaturePourcentageDateItem> lstTemperaturePourcentageDate { get; set; }
     }
 
-    public class DLLTemperatureDateItem
+    public class DLLTemperaturePourcentageDateItem
     {
         public DateTime date { get; set; }
         public float temperature { get; set; }
+        public float pourcentage { get; set; }
+
     }
 }

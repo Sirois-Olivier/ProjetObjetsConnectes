@@ -1,13 +1,14 @@
 ﻿@{
     ViewBag.Title = "Accueil";
 }
-
+@using Iot.Mvc.Models
+@model AccueilModel
 <div class="jumbotron">
     <h2>État actuel de la serre</h2>
     <p></p>
-    <p class="lead">Température :</p>
+    <p class="lead">Température : @Model.temperature C</p>
     <p></p>
-    <p class="lead">Pourcentage d'ouverture de la porte :</p>
+    <p class="lead">Pourcentage d'ouverture de la porte : @Model.pourcentage %</p>
     <p></p>
     <p></p>
     <p><div id="timer"></div></p>
@@ -25,7 +26,7 @@
         <h2>Fermer la porte</h2>
         <p>Permet de fermer la porte de la serre.</p>
         <p><button class="btn btn-default" onclick="SendMessageCloseDoor()">Fermer</button></p>
-        
+
     </div>
 </div>
 <br />
@@ -55,7 +56,7 @@
         });
     });
 
-    var temps = 0; 
+    var temps = 0;
 
     // Inspiré de https://www.w3schools.com/howto/howto_js_countdown.asp
     var x = setInterval(function () {
@@ -67,9 +68,9 @@
         } else {
             document.getElementById("timer").innerHTML = "Dernière actualisation : Il y a " + temps + " seconde(s)";
         }
-        
+
 
     }, 1000);
 
-</script> 
+</script>
 
